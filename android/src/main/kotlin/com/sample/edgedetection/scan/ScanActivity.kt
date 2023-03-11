@@ -55,7 +55,7 @@ class ScanActivity : BaseActivity(), IScanView.Proxy {
                         Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q &&
                         //
                         baseContext.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)
-                ) View.VISIBLE else View.VISIBLE;
+                ) View.GONE else View.GONE;
         flash.setOnClickListener {
             mPresenter.toggleFlash();
         }
@@ -68,7 +68,7 @@ class ScanActivity : BaseActivity(), IScanView.Proxy {
         //
         gallery.visibility =
                 if (initialBundle.getBoolean(EdgeDetectionHandler.CAN_USE_GALLERY, true))
-                    View.VISIBLE
+                    View.GONE
                 else View.GONE;
 
         gallery.setOnClickListener {

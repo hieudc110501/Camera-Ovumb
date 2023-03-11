@@ -74,73 +74,18 @@ class CropPresenter(
                 iCropView.getPaperRect().visibility = View.GONE
             }
     }
-
-    fun enhance() {
-        if (croppedBitmap == null) {
-            Log.i(TAG, "picture null?")
-            return
-        }
-
-        val imgToEnhance: Bitmap? = when {
-            enhancedPicture != null -> {
-                enhancedPicture
-            }
-            rotateBitmap != null -> {
-                rotateBitmap
-            }
-            else -> {
-                croppedBitmap
-            }
-        }
-
-        Observable.create<Bitmap> {
-            it.onNext(enhancePicture(imgToEnhance))
-        }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { pc ->
-
-                enhancedPicture = pc
-                rotateBitmap = enhancedPicture
-
-                iCropView.getCroppedPaper().setImageBitmap(pc)
-            }
-    }
-
     
     fun save() {
         val file = File(initialBundle.getString(EdgeDetectionHandler.SAVE_TO) as String);
 
-        val rotatePic = rotateBitmap
-        if (null != rotatePic) {
+        val cropPic = croppedBitmap
+        if (null != cropPic) {
             val outStream = FileOutputStream(file)
-            rotatePic.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
+            cropPic.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
             outStream.flush()
             outStream.close()
-            rotatePic.recycle()
-            Log.i(TAG, "RotateBitmap Saved")
-        } else {
-            //first save enhanced picture, if picture is not enhanced, save cropped picture, otherwise nothing to do
-            val pic = enhancedPicture
-
-            if (null != pic) {
-                val outStream = FileOutputStream(file)
-                pic.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
-                outStream.flush()
-                outStream.close()
-                pic.recycle()
-                Log.i(TAG, "EnhancedPicture Saved")
-            } else {
-                val cropPic = croppedBitmap
-                if (null != cropPic) {
-                    val outStream = FileOutputStream(file)
-                    cropPic.compress(Bitmap.CompressFormat.JPEG, 100, outStream)
-                    outStream.flush()
-                    outStream.close()
-                    cropPic.recycle()
-                    Log.i(TAG, "CroppedBitmap Saved")
-                }
-            }
+            cropPic.recycle()
+            Log.i(TAG, "CroppedBitmap Saved")
         }
     }
 

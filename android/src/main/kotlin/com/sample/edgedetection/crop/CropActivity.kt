@@ -22,6 +22,8 @@ class CropActivity : BaseActivity(), ICropView.Proxy {
 
     private lateinit var initialBundle: Bundle;
 
+    private var checkCrop = false;
+
     override fun prepare() {
         this.initialBundle = intent.getBundleExtra(EdgeDetectionHandler.INITIAL_BUNDLE) as Bundle;
         this.title = initialBundle.getString(EdgeDetectionHandler.CROP_TITLE)
@@ -42,13 +44,17 @@ class CropActivity : BaseActivity(), ICropView.Proxy {
         val initialBundle = intent.getBundleExtra(EdgeDetectionHandler.INITIAL_BUNDLE) as Bundle;
         mPresenter = CropPresenter(this, this, initialBundle)
         findViewById<ImageView>(R.id.crop).setOnClickListener {
-            Log.e(TAG, "Crop touched!")
-            mPresenter.crop()
-            //changeMenuVisibility(true)
-            mPresenter.save()
-            setResult(Activity.RESULT_OK)
-            //System.gc()
-            finish()
+            if (checkCrop == false) {
+                Log.e(TAG, "Crop touched!")
+                mPresenter.crop()
+                checkCrop = true
+            } else {
+                mPresenter.save()
+                setResult(Activity.RESULT_OK)
+                System.gc()
+                finish()
+            }
+
         }
     }
 
@@ -58,37 +64,4 @@ class CropActivity : BaseActivity(), ICropView.Proxy {
 
     override fun getCroppedPaper(): ImageView = picture_cropped
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.crop_activity_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-
-    private fun changeMenuVisibility(showMenuItems: Boolean) {
-        this.showMenuItems = showMenuItems
-        invalidateOptionsMenu()
-    }
-
-    // handle button activities
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        if (item.itemId == android.R.id.home) {
-            onBackPressed()
-            return true
-        }
-
-        if (item.itemId == R.id.action_label) {
-            Log.e(TAG, "Saved touched!")
-            // Bug fix: prevent clicking more than one time
-            item.setEnabled(false)
-            //
-            mPresenter.save()
-            setResult(Activity.RESULT_OK)
-            System.gc()
-            finish()
-            return true
-        } 
-
-        return super.onOptionsItemSelected(item)
-    }
 }

@@ -26,7 +26,7 @@ class _SelectTestScreenState extends State<SelectTestScreen>
   late Animation<double> animation1;
   String? _imagePath;
 
-  //get image
+  //Mở cameca và chụp để lấy image path
   Future<void> getImage() async {
     bool isCameraGranted = await Permission.camera.request().isGranted;
     if (!isCameraGranted) {
@@ -68,7 +68,7 @@ class _SelectTestScreenState extends State<SelectTestScreen>
     });
   }
 
-  //save image
+  //Lấy file ảnh lưu vào gallery
   Future<void> saveImage() async {
     await GallerySaver.saveImage(_imagePath!);
   }
