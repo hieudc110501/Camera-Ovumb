@@ -19,6 +19,8 @@ import org.opencv.android.Utils
 import org.opencv.core.Mat
 import java.io.File
 import java.io.FileOutputStream
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 
 
 const val IMAGES_DIR = "smart_scanner"
@@ -47,32 +49,32 @@ class CropPresenter(
         iCropView.getPaper().setImageBitmap(bitmap)
     }
 
-    fun crop() {
+    // Khai báo hàm crop() với suspend modifier để sử dụng coroutine
+    suspend fun crop(): Boolean {
         if (picture == null) {
             Log.i(TAG, "picture null?")
-            return
+            return false
         }
 
         if (croppedBitmap != null) {
             Log.i(TAG, "already cropped")
-            return
+            return false
         }
 
-        Observable.create<Mat> {
-            it.onNext(cropPicture(picture, iCropView.getPaperRect().getCorners2Crop()))
+        val pc = withContext(Dispatchers.Default) {
+            cropPicture(picture, iCropView.getPaperRect().getCorners2Crop())
         }
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { pc ->
-                Log.i(TAG, "cropped picture: $pc")
-                croppedPicture = pc
-                croppedBitmap =
-                    Bitmap.createBitmap(pc.width(), pc.height(), Bitmap.Config.ARGB_8888)
-                Utils.matToBitmap(pc, croppedBitmap)
-                iCropView.getCroppedPaper().setImageBitmap(croppedBitmap)
-                iCropView.getPaper().visibility = View.GONE
-                iCropView.getPaperRect().visibility = View.GONE
-            }
+
+        Log.i(TAG, "cropped picture: $pc")
+        croppedPicture = pc
+        croppedBitmap =
+                Bitmap.createBitmap(pc.width(), pc.height(), Bitmap.Config.ARGB_8888)
+        Utils.matToBitmap(pc, croppedBitmap)
+        //iCropView.getCroppedPaper().setImageBitmap(croppedBitmap)
+        //iCropView.getPaper().visibility = View.GONE
+        //iCropView.getPaperRect().visibility = View.GONE
+
+        return true
     }
     
     fun save() {

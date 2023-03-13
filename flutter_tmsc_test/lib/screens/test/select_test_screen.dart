@@ -49,7 +49,7 @@ class _SelectTestScreenState extends State<SelectTestScreen>
         canUseGallery: true,
         androidScanTitle:
             'Quét que Test', // use custom localizations for android
-        androidCropTitle: 'Cắt',
+        androidCropTitle: 'Quét que Test',
         androidCropBlackWhiteTitle: 'Black White',
         androidCropReset: 'Reset',
       );

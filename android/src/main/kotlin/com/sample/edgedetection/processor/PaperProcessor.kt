@@ -41,9 +41,14 @@ fun cropPicture(picture: Mat, pts: List<Point>): Mat {
 
     val srcMat = Mat(4, 1, CvType.CV_32FC2)
     val dstMat = Mat(4, 1, CvType.CV_32FC2)
+    val mulW = dw * 0.2
+    val mulH = dw * 0.2
+    val mul = dw * 0.2
 
+    Log.i(TAG, "dwidth: $dw")
+    Log.i(TAG, "dheigth: $dh")
     srcMat.put(0, 0, tl.x, tl.y, tr.x, tr.y, br.x, br.y, bl.x, bl.y)
-    dstMat.put(0, 0, 0.0, 0.0, dw, 0.0, dw, dh, 0.0, dh)
+    dstMat.put(0, 0, 0.0-mulW, 0.0-mulH, dw+mulW, 0.0-mulH, dw+mulW, dh+mulH, 0.0-mulW, dh+mulH)
 
     val m = Imgproc.getPerspectiveTransform(srcMat, dstMat)
 

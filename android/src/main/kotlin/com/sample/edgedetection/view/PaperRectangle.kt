@@ -137,27 +137,27 @@ class PaperRectangle : View {
         }
     }
 
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-
-        if (!cropMode) {
-            return false
-        }
-        when (event?.action) {
-            MotionEvent.ACTION_DOWN -> {
-                latestDownX = event.x
-                latestDownY = event.y
-                calculatePoint2Move(event.x, event.y)
-            }
-            MotionEvent.ACTION_MOVE -> {
-                point2Move.x = (event.x - latestDownX) + point2Move.x
-                point2Move.y = (event.y - latestDownY) + point2Move.y
-                movePoints()
-                latestDownY = event.y
-                latestDownX = event.x
-            }
-        }
-        return true
-    }
+//    override fun onTouchEvent(event: MotionEvent?): Boolean {
+//
+//        if (!cropMode) {
+//            return false
+//        }
+//        when (event?.action) {
+//            MotionEvent.ACTION_DOWN -> {
+//                latestDownX = event.x
+//                latestDownY = event.y
+//                calculatePoint2Move(event.x, event.y)
+//            }
+//            MotionEvent.ACTION_MOVE -> {
+//                point2Move.x = (event.x - latestDownX) + point2Move.x
+//                point2Move.y = (event.y - latestDownY) + point2Move.y
+//                movePoints()
+//                latestDownY = event.y
+//                latestDownX = event.x
+//            }
+//        }
+//        return true
+//    }
 
     private fun calculatePoint2Move(downX: Float, downY: Float) {
         val points = listOf(tl, tr, br, bl)

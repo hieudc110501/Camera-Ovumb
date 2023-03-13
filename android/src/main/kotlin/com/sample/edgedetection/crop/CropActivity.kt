@@ -12,7 +12,10 @@ import com.sample.edgedetection.R
 import com.sample.edgedetection.base.BaseActivity
 import com.sample.edgedetection.view.PaperRectangle
 import kotlinx.android.synthetic.main.activity_crop.*
-
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 
 class CropActivity : BaseActivity(), ICropView.Proxy {
 
@@ -44,17 +47,21 @@ class CropActivity : BaseActivity(), ICropView.Proxy {
         val initialBundle = intent.getBundleExtra(EdgeDetectionHandler.INITIAL_BUNDLE) as Bundle;
         mPresenter = CropPresenter(this, this, initialBundle)
         findViewById<ImageView>(R.id.crop).setOnClickListener {
-            if (checkCrop == false) {
-                Log.e(TAG, "Crop touched!")
-                mPresenter.crop()
-                checkCrop = true
-            } else {
-                mPresenter.save()
-                setResult(Activity.RESULT_OK)
-                System.gc()
-                finish()
+            Log.e(TAG, "Crop touched!")
+            // Gọi hàm crop() bằng coroutine
+            GlobalScope.launch(Dispatchers.Main) {
+                val result = mPresenter.crop()
+                if (result) {
+                    Log.e(TAG, "Crop done!1")
+                    mPresenter.save()
+                    setResult(Activity.RESULT_OK)
+                    System.gc()
+                    finish()
+                    // Thực hiện đoạn code khi crop() thành công
+                } else {
+                    // Thực hiện đoạn code khi crop() không thành công
+                }
             }
-
         }
     }
 
