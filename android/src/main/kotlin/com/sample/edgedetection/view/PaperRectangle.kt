@@ -37,7 +37,7 @@ class PaperRectangle : View {
     private var latestDownY = 0.0F
 
     init {
-        rectPaint.color = Color.argb(128, 255, 255, 255)
+        rectPaint.color = Color.argb(0, 255, 255, 255)
         rectPaint.isAntiAlias = true
         rectPaint.isDither = true
         rectPaint.strokeWidth = 6F
@@ -124,7 +124,7 @@ class PaperRectangle : View {
         rectPaint.style = Paint.Style.STROKE
         canvas?.drawPath(path, rectPaint)
 
-        rectPaint.color = Color.argb(128, 255, 255, 255)
+        rectPaint.color = Color.argb(0, 255, 255, 255)
         rectPaint.strokeWidth = 0F
         rectPaint.style = Paint.Style.FILL
         canvas?.drawPath(path, rectPaint)
